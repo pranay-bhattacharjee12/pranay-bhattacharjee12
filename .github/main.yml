@@ -1,15 +1,14 @@
 name: Metrics
 
 on:
-  # 🌏 Runs every day at 8:40 PM IST
-  # GitHub Actions uses UTC → 8:40 PM IST = 3:10 PM UTC
+  # Runs every day at 8:47 PM IST (= 3:17 PM UTC)
   schedule:
-    - cron: "10 15 * * *"
+    - cron: "17 15 * * *"
 
-  # 💡 Run workflow manually from the Actions tab
+  # Run manually from the Actions tab
   workflow_dispatch:
 
-  # 🚀 Run workflow when code is pushed
+  # Run when code is pushed
   push:
     branches: ["master", "main"]
 
@@ -20,11 +19,12 @@ jobs:
     steps:
 
       - name: 🎃 People
-        if: ${{ success() || failure() }}
+        if: ${{ always() }}
         uses: lowlighter/metrics@latest
         with:
           filename: people.svg
           token: ${{ secrets.SECRET_KEY }}
+          user: prankush-tech
           base: ""
           plugin_people: yes
           plugin_people_limit: 50
@@ -32,7 +32,7 @@ jobs:
           plugin_people_types: followers, following
 
       - name: 🎃 Achievements
-        if: ${{ success() || failure() }}
+        if: ${{ always() }}
         uses: lowlighter/metrics@latest
         with:
           filename: achievements.svg
@@ -45,10 +45,10 @@ jobs:
           plugin_achievements_display: compact
           plugin_achievements_limit: 18
           plugin_achievements_secrets: yes
-          plugin_achievements_threshold: X
+          plugin_achievements_threshold: C
 
       - name: 🎃 DATA
-        if: ${{ success() || failure() }}
+        if: ${{ always() }}
         uses: lowlighter/metrics@latest
         with:
           filename: data.svg
@@ -59,26 +59,34 @@ jobs:
           config_timezone: Asia/Calcutta
 
       - name: 🎃 Topics
-        if: ${{ success() || failure() }}
+        if: ${{ always() }}
         uses: lowlighter/metrics@latest
         with:
           filename: topics.svg
           token: ${{ secrets.SECRET_KEY }}
+          user: pranay-bhattacharjee12
+          base: ""
           plugin_topics: yes
           plugin_topics_limit: 0
           plugin_topics_mode: icons
-          plugin_notable: yes
-          plugin_discussions: yes
 
       - name: 🎃 Language
-        if: ${{ success() || failure() }}
+        if: ${{ always() }}
         uses: lowlighter/metrics@latest
         with:
           filename: general.svg
           token: ${{ secrets.SECRET_KEY }}
+          user: pranay-bhattacharjee12
           base: header
           base_indepth: yes
+          config_timezone: Asia/Calcutta
           config_order: base.header, isocalendar, languages, notable, discussions, topics
+          plugin_isocalendar: yes
+          plugin_notable: yes
+          plugin_discussions: yes
+          plugin_topics: yes
+          plugin_topics_limit: 0
+          plugin_topics_mode: icons
           plugin_languages: yes
           plugin_languages_ignored: Jupyter Notebook
           plugin_languages_details: lines, bytes-size, percentage
