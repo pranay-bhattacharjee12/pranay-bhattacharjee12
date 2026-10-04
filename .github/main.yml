@@ -1,20 +1,83 @@
-
 name: Metrics
 on:
-  # Schedule daily updates
-  schedule: [{cron: "0 0 * * *"}]
-  # (optional) Run workflow manually
+  # 🌏 Think about the planet! No need to update stats too frequently
+  schedule: [{cron: "0 * * * *"}]
+  # 💡 The following line lets you run workflow manually from the action tab!
   workflow_dispatch:
-  # (optional) Run workflow when pushing on master/main
   push: {branches: ["master", "main"]}
 jobs:
-  github-metrics:
+  metrics:
     runs-on: ubuntu-latest
-    environment: 
-      name: production
-    permissions:
-      contents: write
     steps:
-      - uses: lowlighter/metrics@latest
+
+      - name: 🎃 People
+        if: ${{ success() || failure() }}
+        uses: lowlighter/metrics@latest
         with:
-          token: ${{ secrets.METRICS_TOKEN }}
+          filename: people.svg
+          token: ${{ secrets.SECRET_KEY }}
+          base: ""
+          plugin_people: yes
+          plugin_people_limit: 50
+          plugin_people_size: 28
+          plugin_people_types: followers, following
+
+
+      - name: 🎃 Achievements
+        if: ${{ success() || failure() }}
+        uses: lowlighter/metrics@latest
+        with:
+          filename: achievements.svg
+          token: ${{ secrets.SECRET_KEY }}
+          user: prankush-tech
+          template: classic
+          base: ""
+          config_timezone: Asia/Calcutta
+          plugin_achievements: yes
+          plugin_achievements_display: compact
+          plugin_achievements_limit: 18
+          plugin_achievements_secrets: yes
+          plugin_achievements_threshold: X
+
+      - name: 🎃 DATA
+        if: ${{ success() || failure() }}
+        uses: lowlighter/metrics@latest
+        with:
+          filename: data.svg
+          token: ${{ secrets.SECRET_KEY }}
+          user: prankush-tech
+          template: classic
+          base: header, activity, community, repositories, metadata
+          config_timezone: Asia/Calcutta
+
+      - name: 🎃 topics
+        if: ${{ success() || failure() }}
+        uses: lowlighter/metrics@latest
+        with:
+          filename: topics.svg
+          token: ${{ secrets.SECRET_KEY }}
+          plugin_topics: yes
+          plugin_topics_limit: 0
+          plugin_topics_mode: icons
+          plugin_notable: yes
+          plugin_discussions: yes
+
+
+      - name: 🎃 language
+        if: ${{ success() || failure() }}
+        uses: lowlighter/metrics@latest
+        with:
+          filename: general.svg
+          token: ${{ secrets.SECRET_KEY }}
+          base: header
+          base_indepth: yes
+          config_order: base.header, isocalendar, languages, notable, discussions, topics
+          plugin_languages: yes
+          plugin_languages_ignored: Jupyter Notebook
+          plugin_languages_details: lines, bytes-size, percentage
+          plugin_languages_sections: most-used, recently-used
+          plugin_languages_indepth: yes
+          plugin_languages_limit: 10
+          extras_css: |
+            h2 { display: none !important; }
+            .match:not(:last-child) { padding-bottom: 4px; }
